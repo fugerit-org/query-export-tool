@@ -1,4 +1,4 @@
-package org.fugerit.java.query.export.tool.data;
+package org.fugerit.java.query.export.data;
 
 public interface FieldHandler {
 
