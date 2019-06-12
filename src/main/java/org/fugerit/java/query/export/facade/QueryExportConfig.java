@@ -5,21 +5,28 @@ import java.sql.Connection;
 
 public class QueryExportConfig {
 
+	public static final boolean DEFAULT_EXPORT_HEADER = true;
+	
 	public static QueryExportConfig newConfigCSV( OutputStream output, Connection conn, String query ) {
-		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query );
+		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
 	}
 	
 	public static QueryExportConfig newConfigCSV( OutputStream output, Connection conn, String query, char separator ) {
-		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , separator, output, conn, query );
+		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , separator, output, conn, query, DEFAULT_EXPORT_HEADER );
 	}
 	
 	public QueryExportConfig(String format, char separator, OutputStream output, Connection conn, String query) {
+		this( format, separator, output, conn, query, true );
+	}
+	
+	public QueryExportConfig(String format, char separator, OutputStream output, Connection conn, String query, boolean exportHeader) {
 		super();
 		this.format = format;
 		this.separator = separator;
 		this.output = output;
 		this.conn = conn;
 		this.query = query;
+		this.exportHeader = exportHeader;
 	}
 
 	private String format;
@@ -31,6 +38,8 @@ public class QueryExportConfig {
 	private Connection conn;
 	
 	private String query;
+	
+	private boolean exportHeader;
 
 	public String getFormat() {
 		return format;
@@ -68,6 +77,14 @@ public class QueryExportConfig {
 	}
 	public void setOutput(OutputStream output) {
 		this.output = output;
+	}
+
+	public boolean isExportHeader() {
+		return exportHeader;
+	}
+
+	public void setExportHeader(boolean exportHeader) {
+		this.exportHeader = exportHeader;
 	}
 	
 }
