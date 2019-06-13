@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.Iterator;
 
@@ -31,7 +30,7 @@ public class QueryExportFacade {
 		Statement stm = config.getConn().createStatement();
 		logger.info( "sql : "+config.getQuery() );
 		ResultSet rs = stm.executeQuery( config.getQuery() );
-		MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData() ) , rs );
+		MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData(), config.getObjectFormat() ) , rs );
 		export( config, meta );
 		int count = meta.close();
 		stm.close();

@@ -3,6 +3,8 @@ package org.fugerit.java.query.export.facade;
 import java.io.OutputStream;
 import java.sql.Connection;
 
+import org.fugerit.java.query.export.meta.BasicObjectFormat;
+
 public class QueryExportConfig {
 
 	public static final boolean DEFAULT_EXPORT_HEADER = true;
@@ -45,6 +47,8 @@ public class QueryExportConfig {
 	
 	private boolean exportHeader;
 
+	private BasicObjectFormat objectFormat;
+	
 	public String getFormat() {
 		return format;
 	}
@@ -89,6 +93,14 @@ public class QueryExportConfig {
 
 	public void setExportHeader(boolean exportHeader) {
 		this.exportHeader = exportHeader;
+	}
+
+	public BasicObjectFormat getObjectFormat() {
+		return objectFormat;
+	}
+
+	public void setObjectFormat(BasicObjectFormat objectFormat) {
+		this.objectFormat = objectFormat;
 	}
 	
 }
