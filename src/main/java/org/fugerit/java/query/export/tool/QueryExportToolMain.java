@@ -1,13 +1,7 @@
 package org.fugerit.java.query.export.tool;
 
-import java.io.BufferedWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.FileOutputStream;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
 import java.util.Properties;
 
 import org.fugerit.java.core.cli.ArgUtils;
@@ -15,11 +9,10 @@ import org.fugerit.java.core.db.connect.ConnectionFactory;
 import org.fugerit.java.core.db.connect.ConnectionFactoryImpl;
 import org.fugerit.java.core.io.FileIO;
 import org.fugerit.java.core.util.PropsIO;
+import org.fugerit.java.query.export.facade.QueryExportConfig;
 import org.fugerit.java.query.export.facade.QueryExportFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.opencsv.CSVWriter;
 
 public class QueryExportToolMain {
 
@@ -53,15 +46,20 @@ public class QueryExportToolMain {
 				Properties props = PropsIO.loadFromFile(dbConfig);
 				ConnectionFactory cf = ConnectionFactoryImpl.newInstance(props);
 				Connection conn = cf.getConnection();
+				FileOutputStream fos = new FileOutputStream( outputFile );
 				try {
-					BufferedWriter writer = Files.newBufferedWriter( Paths.get( outputFile ), StandardCharsets.UTF_8 );
 					String sql = FileIO.readString( queryFile );
-					
+					String csvSeparator = params.getProperty( ARG_CSV_SEPARATOR, "," );
+					QueryExportConfig exportConfig = QueryExportConfig.newConfigCSV( fos, conn, sql, csvSeparator.charAt( 0 ) );
+					QueryExportFacade.export( exportConfig );
 				} catch (Exception e) {
 					throw e;
 				} finally {
 					if (conn != null) {
 						conn.close();
+					}
+					if ( fos != null ) {
+						fos.close();	
 					}
 				}
 			}
