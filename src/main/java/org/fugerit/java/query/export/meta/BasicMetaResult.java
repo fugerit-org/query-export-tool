@@ -37,8 +37,8 @@ public class BasicMetaResult implements MetaResult {
 	}
 
 	@Override
-	public ResultSetMetaData getMetaData() throws SQLException {
-		return this.rs.getMetaData();
+	public int getColumnCount() throws SQLException {
+		return this.rs.getMetaData().getColumnCount();
 	}
 
 	@Override
@@ -64,6 +64,9 @@ public class BasicMetaResult implements MetaResult {
 					throw new RuntimeException( e );
 				}
 				return record;
+			}
+			@Override
+			public void remove() {
 			}
 		};
 	}

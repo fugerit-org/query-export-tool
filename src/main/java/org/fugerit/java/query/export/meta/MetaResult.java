@@ -1,14 +1,12 @@
 package org.fugerit.java.query.export.meta;
 
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.Iterator;
 
 public interface MetaResult {
 	
 	public Iterator<MetaRecord> recordIterator() throws Exception;
 
-	public ResultSetMetaData getMetaData() throws SQLException;
+	public int getColumnCount() throws Exception;
 	
 	public boolean hasHeader() throws Exception;
 	

@@ -51,7 +51,7 @@ public class QueryExportFacade {
 	
 	public static int export( QueryExportConfig config, MetaResult meta ) throws Exception {
 		int res = 0;
-		ResultSetMetaData rsmd = meta.getMetaData();
+		int columnCount = meta.getColumnCount();
 		if ( FORMAT_CSV.equalsIgnoreCase( config.getFormat() ) ) {
 			char separator = config.getSeparator();
 			BufferedWriter writer =  new BufferedWriter( new OutputStreamWriter( config.getOutput() , Charset.forName( "UTF-8" ) ) );
@@ -60,7 +60,7 @@ public class QueryExportFacade {
 					'"',
 					CSVWriter.NO_ESCAPE_CHARACTER,
 					CSVWriter.DEFAULT_LINE_END);
-			String[] line = new String[ rsmd.getColumnCount() ];
+			String[] line = new String[ columnCount ];
 			if ( meta.hasHeader() ) {
 				writeRecordCSV(line, meta.headerIterator(), csvwriter);	
 			}
