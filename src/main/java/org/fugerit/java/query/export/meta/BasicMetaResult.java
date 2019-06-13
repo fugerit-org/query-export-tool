@@ -9,6 +9,15 @@ import java.util.List;
 
 public class BasicMetaResult implements MetaResult {
 
+	public static MetaRecord createMetaRecord( String[] line ) {
+		List<MetaField> list = new ArrayList<MetaField>( line.length );
+		for ( int k=0; k<line.length; k++ ) {
+			list.add( new BasicMetaField( line[k] ) );
+		}
+		MetaRecord record = new BasicMetaRecord( list );
+		return record;
+	}
+	
 	public BasicMetaResult( BasicMetaRSE rse, ResultSet rs) {
 		super();
 		this.rse = rse;

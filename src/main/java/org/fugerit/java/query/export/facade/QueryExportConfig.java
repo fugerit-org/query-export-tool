@@ -11,6 +11,10 @@ public class QueryExportConfig {
 		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
 	}
 	
+	public static QueryExportConfig newConfigCSV( OutputStream output, char separator ) {
+		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , separator, output, null, null, DEFAULT_EXPORT_HEADER );
+	}
+	
 	public static QueryExportConfig newConfigCSV( OutputStream output, Connection conn, String query, char separator ) {
 		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , separator, output, conn, query, DEFAULT_EXPORT_HEADER );
 	}
