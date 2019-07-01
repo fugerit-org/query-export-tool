@@ -51,6 +51,8 @@ public class QueryExportToolMain {
 					String sql = FileIO.readString( queryFile );
 					String csvSeparator = params.getProperty( ARG_CSV_SEPARATOR, "," );
 					QueryExportConfig exportConfig = QueryExportConfig.newConfigCSV( fos, conn, sql, csvSeparator.charAt( 0 ) );
+					exportConfig.setFormat( outputFormat );
+					exportConfig.setParams( params );
 					QueryExportFacade.export( exportConfig );
 				} catch (Exception e) {
 					throw e;

@@ -2,6 +2,7 @@ package org.fugerit.java.query.export.facade;
 
 import java.io.OutputStream;
 import java.sql.Connection;
+import java.util.Properties;
 
 import org.fugerit.java.query.export.meta.BasicObjectFormat;
 
@@ -49,6 +50,16 @@ public class QueryExportConfig {
 
 	private BasicObjectFormat objectFormat;
 	
+	private Properties params;
+	
+	public Properties getParams() {
+		return params;
+	}
+
+	public void setParams(Properties params) {
+		this.params = params;
+	}
+
 	public String getFormat() {
 		return format;
 	}
