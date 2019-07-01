@@ -22,6 +22,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
+		<!-- libraries versions -->
+		<fj-version>0.4.6</fj-version>
+		<opencsv-version>4.6</opencsv-version>
+		<poi-version>3.16</poi-version>
 	</properties>
 
 	<licenses>
@@ -46,8 +50,6 @@
 			<organizationUrl>http://www.fugerit.org</organizationUrl>
 		</developer>
 	</developers>
-
-
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -80,20 +82,20 @@
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
-			<version>4.6</version>
+			<version>${opencsv-version}</version>
 		</dependency>
 
 		<dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi</artifactId>
-		    <version>3.16</version>
+		    <version>${poi-version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-ooxml</artifactId>
-		    <version>3.16</version>
+		    <version>${poi-version}</version>
 		</dependency>
 
         <dependency>
