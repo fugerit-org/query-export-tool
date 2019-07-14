@@ -3,10 +3,8 @@ package org.fugerit.java.query.export.facade;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import org.fugerit.java.core.lang.helpers.ClassHelper;
 import org.fugerit.java.core.util.collection.ListMapStringKey;
-import org.fugerit.java.query.export.facade.format.QueryExportHandlerCSV;
-import org.fugerit.java.query.export.facade.format.QueryExportHandlerXLS;
-import org.fugerit.java.query.export.facade.format.QueryExportHandlerXLSX;
 import org.fugerit.java.query.export.meta.BasicMetaRSE;
 import org.fugerit.java.query.export.meta.BasicMetaResult;
 import org.fugerit.java.query.export.meta.MetaResult;
@@ -24,11 +22,22 @@ public class QueryExportFacade {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(QueryExportFacade.class);
 	
+	private static void registerHandler( String type, ListMapStringKey<QueryExportHandler> handlers ) {
+		try {
+			QueryExportHandler handler = (QueryExportHandler)ClassHelper.newInstance( type );
+			handlers.add( handler );
+		} catch (Throwable e) {
+			String message = "Failed to register handler : "+type+" "+e;
+			logger.warn( message+" [set log level to debug for full stack trace]" );
+			logger.debug( message, e );
+		}
+	}
+	
 	private static ListMapStringKey<QueryExportHandler> HANDLERS = new ListMapStringKey<QueryExportHandler>();
 	static {
-		HANDLERS.add( new QueryExportHandlerCSV() );
-		HANDLERS.add( new QueryExportHandlerXLS() );
-		HANDLERS.add( new QueryExportHandlerXLSX() );
+		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerCSV" , HANDLERS );
+		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerXLS" , HANDLERS );
+		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerXLSX" , HANDLERS );
 	}
 	
 	public static int export( QueryExportConfig config ) throws Exception {
