@@ -5,7 +5,7 @@
 	<groupId>org.fugerit.java</groupId>
 	<artifactId>query-export-tool</artifactId>
 
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1.10</version>
 	<packaging>jar</packaging>
 
 	<name>query-export-tool</name>
