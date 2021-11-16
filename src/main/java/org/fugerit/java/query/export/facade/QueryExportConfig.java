@@ -10,6 +10,10 @@ public class QueryExportConfig {
 
 	public static final boolean DEFAULT_EXPORT_HEADER = true;
 	
+	public static QueryExportConfig newConfigHTML( OutputStream output, Connection conn, String query ) {
+		return new QueryExportConfig( QueryExportFacade.FORMAT_HTML , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
+	}
+	
 	public static QueryExportConfig newConfigCSV( OutputStream output, Connection conn, String query ) {
 		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
 	}

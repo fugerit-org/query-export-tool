@@ -31,15 +31,15 @@ public class QueryExportToolMain {
 	public static void main(String[] args) {
 		Properties params = ArgUtils.getArgs(args);
 		try {
-			logger.info("params: " + params);
+			logger.info("params: {}", params);
 			String dbConfig = params.getProperty(ARG_DB_CONFIG);
 			String queryFile = params.getProperty(ARG_QUERY_FILE);
 			String outputFile = params.getProperty(ARG_OUTPUT_FILE);
 			String outputFormat = params.getProperty(ARG_OUTPUT_FORMAT, QueryExportFacade.FORMAT_DEFAULT );
-			logger.info("param : " + ARG_DB_CONFIG + "=" + dbConfig);
-			logger.info("param : " + ARG_QUERY_FILE + "=" + queryFile);
-			logger.info("param : " + ARG_OUTPUT_FILE + "=" + outputFile);
-			logger.info("param : " + ARG_OUTPUT_FORMAT + "=" + outputFormat);
+			logger.info("param : {} = {}", ARG_DB_CONFIG , dbConfig);
+			logger.info("param : {} = {}", ARG_QUERY_FILE , queryFile);
+			logger.info("param : {} = {}", ARG_OUTPUT_FILE , outputFile);
+			logger.info("param : {} = {}", ARG_OUTPUT_FORMAT , outputFormat);
 			if (queryFile == null || outputFile == null) {
 				throw new Exception("Missing required arguments " + ARG_OUTPUT_FILE + ", " + ARG_QUERY_FILE);
 			} else {

@@ -20,6 +20,8 @@ public class QueryExportFacade {
 	public static final String FORMAT_DEFAULT = FORMAT_CSV;
 	public static final char CSV_SEPARATOR_DEF = ',';
 	
+	public static final String FORMAT_HTML = "html";
+	
 	protected static final Logger logger = LoggerFactory.getLogger(QueryExportFacade.class);
 	
 	private static void registerHandler( String type, ListMapStringKey<QueryExportHandler> handlers ) {
@@ -38,6 +40,7 @@ public class QueryExportFacade {
 		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerCSV" , HANDLERS );
 		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerXLS" , HANDLERS );
 		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerXLSX" , HANDLERS );
+		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerHTML" , HANDLERS );
 	}
 	
 	public static int export( QueryExportConfig config ) throws Exception {
@@ -66,3 +69,4 @@ public class QueryExportFacade {
 	}
 	
 }
+
