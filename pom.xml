@@ -5,7 +5,7 @@
 	<groupId>org.fugerit.java</groupId>
 	<artifactId>query-export-tool</artifactId>
 
-	<version>0.3.0</version>
+	<version>0.3.1</version>
 	<packaging>jar</packaging>
 
 	<name>query-export-tool</name>
@@ -23,8 +23,8 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<!-- libraries versions -->
-		<fj-version>0.7.4.8</fj-version>
-		<opencsv-version>4.6</opencsv-version>
+		<fj-version>0.7.6.8</fj-version>
+		<opencsv-version>5.6</opencsv-version>
 		<poi-version>4.1.2</poi-version>
 	</properties>
 

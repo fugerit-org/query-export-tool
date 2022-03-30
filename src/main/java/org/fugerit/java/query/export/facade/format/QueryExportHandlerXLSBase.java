@@ -18,11 +18,32 @@ import org.fugerit.java.query.export.meta.MetaResult;
 
 public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
 
+    public static void resizeSheet( Sheet s ) {
+        Row row = s.getRow( 0 );
+        Iterator<Cell> cells = row.cellIterator();
+        while ( cells.hasNext() ) {
+                Cell c = cells.next();
+                s.autoSizeColumn( c.getColumnIndex() );
+        }
+    }
+
+	public static void autoSizeColumns(Workbook workbook) {
+	    int numberOfSheets = workbook.getNumberOfSheets();
+	    for (int i = 0; i < numberOfSheets; i++) {
+	        Sheet sheet = workbook.getSheetAt(i);
+	        resizeSheet( sheet );
+	    }
+	}
+	
 	public QueryExportHandlerXLSBase(String format) {
 		super(format);
 	}
 
 	public static final String ARG_XLS_TEMPLATE = "xls-template";
+	
+	public static final String ARG_XLS_RESIZE = "xls-resize";
+	
+	public static final String ARG_XLS_RESIZE_DEFAULT = "false";
 	
 	private void addRow( Iterator<MetaField> record, Sheet sheet, int index ) throws Exception {
 		int col = 0;
