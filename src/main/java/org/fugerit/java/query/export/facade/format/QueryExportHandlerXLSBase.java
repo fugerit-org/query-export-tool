@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.fugerit.java.core.lang.helpers.BooleanUtils;
 import org.fugerit.java.query.export.facade.QueryExportConfig;
 import org.fugerit.java.query.export.facade.QueryExportHandler;
 import org.fugerit.java.query.export.meta.MetaField;
@@ -84,6 +85,9 @@ public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
 			MetaRecord record = itRec.next();
 			addRow( record.fieldIterator() , sheet, index );
 			index++;
+		}
+		if ( BooleanUtils.isTrue( config.getParams().getProperty( ARG_XLS_RESIZE ) ) ) {
+			resizeSheet( sheet );
 		}
 		workbook.write( config.getOutput() );
 		workbook.close();

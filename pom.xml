@@ -5,7 +5,7 @@
 	<groupId>org.fugerit.java</groupId>
 	<artifactId>query-export-tool</artifactId>
 
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<packaging>jar</packaging>
 
 	<name>query-export-tool</name>
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>org.fugerit.java</groupId>
 			<artifactId>fj-core</artifactId>
-			<version>0.4.6</version>
+			<version>${fj-version}</version>
 		</dependency>
 	
 		<!-- java core dependancies -->
