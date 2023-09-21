@@ -13,15 +13,12 @@ public abstract class BasicMetaRSE implements RSExtractor<MetaRecord> {
 	private ResultSetMetaData rsmd;
 	
 	private BasicObjectFormat format;
-	
-	@Override
-	public abstract MetaRecord extractNext(ResultSet rs) throws SQLException;
 
-	public void init( ResultSetMetaData rsmd ) throws Exception {
+	public void init( ResultSetMetaData rsmd ) {
 		this.init( rsmd , BasicObjectFormat.DEF );
 	}
 	
-	public void init( ResultSetMetaData rsmd, BasicObjectFormat format ) throws Exception {
+	public void init( ResultSetMetaData rsmd, BasicObjectFormat format ) {
 		this.rsmd = rsmd;
 		this.format = format;
 		if ( format == null ) {
@@ -29,7 +26,7 @@ public abstract class BasicMetaRSE implements RSExtractor<MetaRecord> {
 		}
 	}
 	
-	public void destroy( ) throws Exception {
+	public void destroy( ) {
 		this.rsmd = null;
 	}
 	
@@ -41,13 +38,13 @@ public abstract class BasicMetaRSE implements RSExtractor<MetaRecord> {
 		return format;
 	}
 
-	public static BasicMetaRSE newInstanceAllToString( ResultSetMetaData rsmd, BasicObjectFormat format ) throws Exception {
+	public static BasicMetaRSE newInstanceAllToString( ResultSetMetaData rsmd, BasicObjectFormat format ) {
 		BasicMetaRSEAllToString rse = new BasicMetaRSEAllToString();
 		rse.init( rsmd, format );
 		return rse;
 	}
 	
-	public static BasicMetaRSE newInstanceAllToString( ResultSetMetaData rsmd ) throws Exception {
+	public static BasicMetaRSE newInstanceAllToString( ResultSetMetaData rsmd ) {
 		return newInstanceAllToString( rsmd, BasicObjectFormat.DEF );
 	}
 
@@ -57,7 +54,7 @@ class BasicMetaRSEAllToString extends BasicMetaRSE {
 	
 	@Override
 	public MetaRecord extractNext(ResultSet rs) throws SQLException {
-		List<MetaField> fields = new ArrayList<MetaField>();
+		List<MetaField> fields = new ArrayList<>();
 		for ( int k=0; k<this.getRsmd().getColumnCount(); k++ ) {
 			Object current = rs.getObject( k+1 );
 			try {

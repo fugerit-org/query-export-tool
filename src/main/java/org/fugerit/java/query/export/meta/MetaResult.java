@@ -4,14 +4,14 @@ import java.util.Iterator;
 
 public interface MetaResult {
 	
-	public Iterator<MetaRecord> recordIterator() throws Exception;
+	public Iterator<MetaRecord> recordIterator();
 
-	public int getColumnCount() throws Exception;
+	public int getColumnCount();
 	
-	public boolean hasHeader() throws Exception;
+	public boolean hasHeader();
 	
-	public Iterator<MetaField> headerIterator() throws Exception;
+	public Iterator<MetaField> headerIterator();
 	
-	public int close() throws Exception;
+	public int close();
 	
 }

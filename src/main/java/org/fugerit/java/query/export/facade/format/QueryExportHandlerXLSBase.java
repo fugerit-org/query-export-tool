@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.fugerit.java.core.function.SafeFunction;
 import org.fugerit.java.core.lang.helpers.BooleanUtils;
 import org.fugerit.java.query.export.facade.QueryExportConfig;
 import org.fugerit.java.query.export.facade.QueryExportHandler;
@@ -36,7 +37,7 @@ public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
 	    }
 	}
 	
-	public QueryExportHandlerXLSBase(String format) {
+	protected QueryExportHandlerXLSBase(String format) {
 		super(format);
 	}
 
@@ -46,11 +47,11 @@ public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
 	
 	public static final String ARG_XLS_RESIZE_DEFAULT = "false";
 	
-	private void addRow( Iterator<MetaField> record, Sheet sheet, int index ) throws Exception {
+	private void addRow( Iterator<MetaField> currentRecord, Sheet sheet, int index ) {
 		int col = 0;
 		Row row = sheet.createRow( index );
-		while ( record.hasNext() ) {
-			MetaField field = record.next();
+		while ( currentRecord.hasNext() ) {
+			MetaField field = currentRecord.next();
 			String value = field.getStringValue();
 			Cell cell = row.createCell( col );
 			cell.setCellValue( value );
@@ -62,36 +63,46 @@ public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
 	
 	public abstract Workbook newWorkbook( InputStream is ) throws IOException;
 	
-	public int export( QueryExportConfig config, MetaResult meta ) throws Exception {
-		int res = 0;
+	private Workbook newWorkbookHelper( String xlsTemplate ) throws IOException {
 		Workbook workbook = null;
-		Sheet sheet = null;
-		String xlsTemplate = config.getParams().getProperty( ARG_XLS_TEMPLATE );
 		if ( xlsTemplate == null ) {
 			workbook = this.newWorkbook();
-			sheet = workbook.createSheet();
-			if ( meta.hasHeader() ) {
-				addRow( meta.headerIterator() , sheet, 0 );
-			}
 		} else {
-			FileInputStream fis = new FileInputStream( new File( xlsTemplate ) );
-			workbook = this.newWorkbook( fis );
-			fis.close();
-			sheet = workbook.getSheetAt( 0 );
+			try (FileInputStream fis = new FileInputStream( new File( xlsTemplate ) )) {
+				workbook = this.newWorkbook( fis );
+			}
 		}
-		int index = 1;
-		Iterator<MetaRecord> itRec = meta.recordIterator();
-		while ( itRec.hasNext() ) {
-			MetaRecord record = itRec.next();
-			addRow( record.fieldIterator() , sheet, index );
-			index++;
-		}
-		if ( BooleanUtils.isTrue( config.getParams().getProperty( ARG_XLS_RESIZE ) ) ) {
-			resizeSheet( sheet );
-		}
-		workbook.write( config.getOutput() );
-		workbook.close();
-		return res;
+		return workbook;
+	}
+	
+	public int export( QueryExportConfig config, MetaResult meta ) {
+		return SafeFunction.get( () -> {
+			int res = 0;
+			Sheet sheet = null;
+			String xlsTemplate = config.getParams().getProperty( ARG_XLS_TEMPLATE );
+			try ( Workbook workbook = this.newWorkbookHelper(xlsTemplate) ) {
+				if ( xlsTemplate == null ) {
+					sheet = workbook.createSheet();
+					if ( meta.hasHeader() ) {
+						addRow( meta.headerIterator() , sheet, 0 );
+					}
+				} else {
+					sheet = workbook.getSheetAt( 0 );
+				}
+				int index = 1;
+				Iterator<MetaRecord> itRec = meta.recordIterator();
+				while ( itRec.hasNext() ) {
+					MetaRecord currentRecord = itRec.next();
+					addRow( currentRecord.fieldIterator() , sheet, index );
+					index++;
+				}
+				if ( BooleanUtils.isTrue( config.getParams().getProperty( ARG_XLS_RESIZE ) ) ) {
+					resizeSheet( sheet );
+				}
+				workbook.write( config.getOutput() );
+			}
+			return res;
+		} );
 	}
 
 }

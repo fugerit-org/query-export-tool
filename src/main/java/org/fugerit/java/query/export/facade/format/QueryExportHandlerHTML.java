@@ -2,7 +2,7 @@ package org.fugerit.java.query.export.facade.format;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 import org.fugerit.java.query.export.facade.QueryExportConfig;
@@ -15,17 +15,17 @@ import org.fugerit.java.query.export.meta.MetaResult;
 public class QueryExportHandlerHTML extends QueryExportHandler {
 
 	@Override
-	public int export(QueryExportConfig config, MetaResult meta) throws Exception {
+	public int export(QueryExportConfig config, MetaResult meta) {
 		int res = EXIT_OK;
-		try ( PrintWriter writer =  new PrintWriter( new OutputStreamWriter( config.getOutput() , Charset.forName( "UTF-8" ) ) ) ) {
+		try ( PrintWriter writer =  new PrintWriter( new OutputStreamWriter( config.getOutput() , StandardCharsets.UTF_8 ) ) ) {
 			writer.println( "<table>" );
 			if ( meta.hasHeader() ) {
 				writeRecordHTML( meta.headerIterator(), writer, "th");	
 			}
 			Iterator<MetaRecord> itRec = meta.recordIterator();
 			while ( itRec.hasNext() ) {
-				MetaRecord record = itRec.next();
-				Iterator<MetaField> itField = record.fieldIterator();
+				MetaRecord currentRecord = itRec.next();
+				Iterator<MetaField> itField = currentRecord.fieldIterator();
 				writeRecordHTML( itField, writer, "td");
 			}
 			writer.println( "</table>" );
@@ -37,7 +37,7 @@ public class QueryExportHandlerHTML extends QueryExportHandler {
 		super( QueryExportFacade.FORMAT_HTML );
 	}
 
-	private static void writeRecordHTML( Iterator<MetaField> itField, PrintWriter writer, String cellType ) throws Exception {
+	private static void writeRecordHTML( Iterator<MetaField> itField, PrintWriter writer, String cellType ) {
 		writer.println( "<tr>" );
 		while ( itField.hasNext() ) {
 			MetaField field = itField.next();

@@ -5,7 +5,7 @@ import org.fugerit.java.core.util.collection.ListMapStringKey;
 public class QueryMetaData {
 
 	public QueryMetaData() {
-		this.fieldMetaData = new ListMapStringKey<FieldMetaData>();
+		this.fieldMetaData = new ListMapStringKey<>();
 	}
 	
 	private ListMapStringKey<FieldMetaData> fieldMetaData;

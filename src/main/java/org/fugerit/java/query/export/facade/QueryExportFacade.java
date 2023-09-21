@@ -3,6 +3,8 @@ package org.fugerit.java.query.export.facade;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import org.fugerit.java.core.cfg.ConfigRuntimeException;
+import org.fugerit.java.core.function.SafeFunction;
 import org.fugerit.java.core.lang.helpers.ClassHelper;
 import org.fugerit.java.core.util.collection.ListMapStringKey;
 import org.fugerit.java.query.export.meta.BasicMetaRSE;
@@ -13,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 public class QueryExportFacade {
 
+	private QueryExportFacade() {}
+	
 	public static final String FORMAT_XLS = "xls";
 	public static final String FORMAT_XLSX = "xlsx";
 	
@@ -28,14 +32,14 @@ public class QueryExportFacade {
 		try {
 			QueryExportHandler handler = (QueryExportHandler)ClassHelper.newInstance( type );
 			handlers.add( handler );
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			String message = "Failed to register handler : "+type+" "+e;
-			logger.warn( message+" [set log level to debug for full stack trace]" );
+			logger.warn("{} [set log level to debug for full stack trace]", message );
 			logger.debug( message, e );
 		}
 	}
 	
-	private static ListMapStringKey<QueryExportHandler> HANDLERS = new ListMapStringKey<QueryExportHandler>();
+	private static final ListMapStringKey<QueryExportHandler> HANDLERS = new ListMapStringKey<>();
 	static {
 		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerCSV" , HANDLERS );
 		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerXLS" , HANDLERS );
@@ -43,29 +47,33 @@ public class QueryExportFacade {
 		registerHandler( "org.fugerit.java.query.export.facade.format.QueryExportHandlerHTML" , HANDLERS );
 	}
 	
-	public static int export( QueryExportConfig config ) throws Exception {
-		int res = 0;
-		Statement stm = config.getConn().createStatement();
-		logger.info( "sql : "+config.getQuery() );
-		ResultSet rs = stm.executeQuery( config.getQuery() );
-		MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData(), config.getObjectFormat() ) , rs );
-		export( config, meta );
-		int count = meta.close();
-		stm.close();
-		logger.info( "record count "+count );
-		return res;
+	public static int export( QueryExportConfig config ) {
+		return SafeFunction.get( () -> {
+			int res = 0;
+			try (Statement stm = config.getConn().createStatement()) {
+				logger.info( "sql : {}", config.getQuery() );
+				ResultSet rs = stm.executeQuery( config.getQuery() );
+				MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData(), config.getObjectFormat() ) , rs );
+				export( config, meta );
+				int count = meta.close();
+				logger.info( "record count {}", count );
+			}
+			return res;
+		} );
 	}
 	
-	public static int export( QueryExportConfig config, MetaResult meta ) throws Exception {
-		int res = 0;
-		String format = config.getFormat().toLowerCase();
-		QueryExportHandler handler = HANDLERS.get( format );
-		if ( handler != null ) {
-			res = handler.export(config, meta);
-		} else {
-			throw new Exception( "Unsupported export format "+format );
-		}
-		return res;
+	public static int export( QueryExportConfig config, MetaResult meta ) {
+		return SafeFunction.get( () -> {
+			int res = 0;
+			String format = config.getFormat().toLowerCase();
+			QueryExportHandler handler = HANDLERS.get( format );
+			if ( handler != null ) {
+				res = handler.export(config, meta);
+			} else {
+				throw new ConfigRuntimeException( "Unsupported export format "+format );
+			}
+			return res;			
+		} );
 	}
 	
 }

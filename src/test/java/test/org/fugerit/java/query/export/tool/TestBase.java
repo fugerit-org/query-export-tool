@@ -42,7 +42,7 @@ public class TestBase {
      * @throws SQLException
      */
     protected static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:hsqldb:mem:employees", "vinod", "vinod");
+        return DriverManager.getConnection("jdbc:hsqldb:mem:base_db", "testdb", "testdb");
     }
 	
     @AfterClass

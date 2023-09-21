@@ -1,15 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.fugerit.java</groupId>
+	<parent>
+		<groupId>org.fugerit.java</groupId>
+		<artifactId>fj-bom</artifactId>
+		<version>1.4.0</version>
+		<relativePath></relativePath>
+	</parent>
+
 	<artifactId>query-export-tool</artifactId>
 
 	<version>0.3.2</version>
 	<packaging>jar</packaging>
 
 	<name>query-export-tool</name>
-	<description>Tool export query in CSV (and in the furutre other) formats</description>
+	<description>Tool export query in CSV (and in the future other) formats</description>
 	<url>http://www.fugerit.org/java/</url>
 
 	<scm>
@@ -23,9 +30,8 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<!-- libraries versions -->
-		<fj-version>0.7.6.8</fj-version>
+		<fj-version>8.3.7</fj-version>
 		<opencsv-version>5.6</opencsv-version>
-		<poi-version>4.1.2</poi-version>
 	</properties>
 
 	<licenses>
@@ -65,7 +71,7 @@
 			<artifactId>fj-core</artifactId>
 			<version>${fj-version}</version>
 		</dependency>
-	
+
 		<!-- java core dependancies -->
 		<dependency>
 			<groupId>maven</groupId>
@@ -86,128 +92,32 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi</artifactId>
-		    <version>${poi-version}</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi-version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml</artifactId>
-		    <version>${poi-version}</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
 		</dependency>
 
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.3.4</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
 
-	<build>
-
-		<plugins>
-		
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
-				<configuration>
-					<stylesheetfile>src/main/javadoc/stylesheet.css</stylesheetfile>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>		
-		
-		</plugins>
-
-	</build>
-
 	<profiles>
-
-		<profile>
-			<id>full</id>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-source-plugin</artifactId>
-							<version>3.0.1</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<version>2.10.4</version>
-						</plugin>
-					</plugins>					
-				</pluginManagement>
-			</build>
-		</profile>
-
-		<profile>
-			<id>doRelease</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.8</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
-						</configuration>
-					</plugin>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-				</plugins>
-			</build>
-		</profile>
 
 		<profile>
 			<id>singlepackage</id>
@@ -225,7 +135,7 @@
 								</manifest>
 							</archive>
 						</configuration>
-					</plugin>				
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-shade-plugin</artifactId>
@@ -247,19 +157,9 @@
 		</profile>
 	</profiles>
 
-	<reporting>
-	    <plugins>
-	      <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-changelog-plugin</artifactId>
-	        <version>2.3</version>
-	      </plugin>
-	    </plugins>
-	  </reporting>
-
 	<organization>
 		<url>http://www.fugerit.org</url>
 		<name>Fugerit</name>
 	</organization>
-		
+
 </project>

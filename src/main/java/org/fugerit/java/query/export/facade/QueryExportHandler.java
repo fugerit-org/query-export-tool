@@ -13,12 +13,12 @@ public abstract class QueryExportHandler implements KeyObject<String> {
 		return format;
 	}
 
-	public QueryExportHandler(String format) {
+	protected QueryExportHandler(String format) {
 		super();
 		this.format = format;
 	}
 	
-	public abstract int export( QueryExportConfig config, MetaResult meta ) throws Exception;
+	public abstract int export( QueryExportConfig config, MetaResult meta );
 
 	@Override
 	public String getKey() {

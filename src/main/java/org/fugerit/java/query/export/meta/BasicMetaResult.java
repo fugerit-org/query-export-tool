@@ -2,20 +2,21 @@ package org.fugerit.java.query.export.meta;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.fugerit.java.core.cfg.CloseHelper;
+import org.fugerit.java.core.function.SafeFunction;
+
 public class BasicMetaResult implements MetaResult {
 
 	public static MetaRecord createMetaRecord( String[] line ) {
-		List<MetaField> list = new ArrayList<MetaField>( line.length );
+		List<MetaField> list = new ArrayList<>( line.length );
 		for ( int k=0; k<line.length; k++ ) {
 			list.add( new BasicMetaField( line[k] ) );
 		}
-		MetaRecord record = new BasicMetaRecord( list );
-		return record;
+		return new BasicMetaRecord( list );
 	}
 	
 	public BasicMetaResult( BasicMetaRSE rse, ResultSet rs) {
@@ -31,58 +32,48 @@ public class BasicMetaResult implements MetaResult {
 	private int count;
 	
 	@Override
-	public boolean hasHeader() throws Exception {
+	public boolean hasHeader() {
 		return true;
 	}
 
 	@Override
-	public Iterator<MetaField> headerIterator() throws Exception {
-		List<MetaField> list = new ArrayList<MetaField>();
-		ResultSetMetaData rsmd = this.rs.getMetaData();
-		for ( int k=0; k<rsmd.getColumnCount(); k++ ) {
-			list.add( new BasicMetaField( rsmd.getColumnLabel( k+1 ) ) );
-		}
-		return list.iterator();
+	public Iterator<MetaField> headerIterator() {
+		return SafeFunction.get( () -> {
+			List<MetaField> list = new ArrayList<>();
+			ResultSetMetaData rsmd = this.rs.getMetaData();
+			for ( int k=0; k<rsmd.getColumnCount(); k++ ) {
+				list.add( new BasicMetaField( rsmd.getColumnLabel( k+1 ) ) );
+			}
+			return list.iterator();
+		} );
 	}
 
 	@Override
-	public int getColumnCount() throws SQLException {
-		return this.rs.getMetaData().getColumnCount();
+	public int getColumnCount() {
+		return SafeFunction.get( () -> this.rs.getMetaData().getColumnCount() );
 	}
 
 	@Override
-	public Iterator<MetaRecord> recordIterator() throws Exception {
+	public Iterator<MetaRecord> recordIterator() {
 		return new Iterator<MetaRecord>() {
 			@Override
 			public boolean hasNext() {
-				boolean next = false;
-				try {
-					next = rs.next();
-				} catch (SQLException e) {
-					throw new RuntimeException( e );
-				}
-				return next;
+				return SafeFunction.get( () -> rs.next() );
 			}
 			@Override
 			public MetaRecord next() {
-				MetaRecord record = null;
-				try {
-					record = rse.extractNext( rs );
-					count++;
-				} catch (SQLException e) {
-					throw new RuntimeException( e );
-				}
-				return record;
+				return SafeFunction.get( () -> rse.extractNext( rs ) );
 			}
 			@Override
 			public void remove() {
+				// no need to do anything here
 			}
 		};
 	}
 
 	@Override
-	public int close() throws Exception {
-		this.rs.close();
+	public int close() {
+		CloseHelper.closeRuntimeEx( this.rs );
 		this.rs = null;
 		this.rse.destroy();
 		this.rse = null;

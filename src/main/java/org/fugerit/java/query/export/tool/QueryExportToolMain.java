@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.util.Properties;
 
+import org.fugerit.java.core.cfg.ConfigRuntimeException;
 import org.fugerit.java.core.cli.ArgUtils;
 import org.fugerit.java.core.db.connect.ConnectionFactory;
 import org.fugerit.java.core.db.connect.ConnectionFactoryImpl;
@@ -36,6 +37,8 @@ public class QueryExportToolMain {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(QueryExportToolMain.class);
 	
+	private static final String PRINT_PARAM = "param : {} = {}";
+	
 	public static void worker(Properties params) {
 		try {
 			logger.info("params: {}", params);
@@ -45,40 +48,30 @@ public class QueryExportToolMain {
 			String outputFile = params.getProperty(ARG_OUTPUT_FILE);
 			String outputFormat = params.getProperty(ARG_OUTPUT_FORMAT, QueryExportFacade.FORMAT_DEFAULT );
 			String createPath = params.getProperty(ARG_CREATE_PATH, ARG_CREATE_PATH_DEFAULT );
-			logger.info("param : {} = {}", ARG_DB_CONFIG , dbConfig);
-			logger.info("param : {} = {}", ARG_QUERY_FILE , queryFile);
-			logger.info("param : {} = {}", ARG_OUTPUT_FILE , outputFile);
-			logger.info("param : {} = {}", ARG_OUTPUT_FORMAT , outputFormat);
+			logger.info(PRINT_PARAM, ARG_DB_CONFIG , dbConfig);
+			logger.info(PRINT_PARAM, ARG_QUERY_FILE , queryFile);
+			logger.info(PRINT_PARAM, ARG_OUTPUT_FILE , outputFile);
+			logger.info(PRINT_PARAM, ARG_OUTPUT_FORMAT , outputFormat);
 			String sql = querySql;
 			if ( StringUtils.isNotEmpty( queryFile ) ) {
 				sql = FileIO.readString( queryFile );
 			}
 			if ( sql == null || outputFile == null) {
-				throw new Exception("Missing required arguments " + ARG_OUTPUT_FILE + ", " + ARG_QUERY_FILE + " or " + ARG_QUERY_SQL);
+				throw new ConfigRuntimeException("Missing required arguments " + ARG_OUTPUT_FILE + ", " + ARG_QUERY_FILE + " or " + ARG_QUERY_SQL);
 			} else {
 				Properties props = PropsIO.loadFromFile(dbConfig);
 				ConnectionFactory cf = ConnectionFactoryImpl.newInstance(props);
-				Connection conn = cf.getConnection();
 				File output = new File( outputFile );
 				if ( BooleanUtils.isTrue( createPath ) && !output.getParentFile().exists() ) {
 					logger.info( "create-path {} -> {}", output.getParentFile().getCanonicalPath(), output.getParentFile().mkdirs() );
 				}
-				FileOutputStream fos = new FileOutputStream( output );
-				try {
+				try ( Connection conn = cf.getConnection(); 
+						FileOutputStream fos = new FileOutputStream( output ) ) {
 					String csvSeparator = params.getProperty( ARG_CSV_SEPARATOR, "," );
 					QueryExportConfig exportConfig = QueryExportConfig.newConfigCSV( fos, conn, sql, csvSeparator.charAt( 0 ) );
 					exportConfig.setFormat( outputFormat );
 					exportConfig.setParams( params );
 					QueryExportFacade.export( exportConfig );
-				} catch (Exception e) {
-					throw e;
-				} finally {
-					if (conn != null) {
-						conn.close();
-					}
-					if ( fos != null ) {
-						fos.close();	
-					}
 				}
 			}
 		} catch (Exception e) {
