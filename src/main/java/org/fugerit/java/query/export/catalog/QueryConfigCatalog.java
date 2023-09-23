@@ -3,12 +3,16 @@ package org.fugerit.java.query.export.catalog;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.Properties;
 
 import org.fugerit.java.core.cfg.ConfigRuntimeException;
 import org.fugerit.java.core.cfg.xml.CustomListCatalogConfig;
+import org.fugerit.java.core.cfg.xml.GenericListCatalogConfig;
+import org.fugerit.java.core.function.SafeFunction;
 import org.fugerit.java.core.io.helper.HelperIOException;
+import org.fugerit.java.core.io.helper.StreamHelper;
 import org.fugerit.java.core.lang.helpers.BooleanUtils;
 import org.fugerit.java.core.lang.helpers.StringUtils;
 import org.fugerit.java.core.util.collection.ListMapStringKey;
@@ -28,6 +32,29 @@ public class QueryConfigCatalog extends CustomListCatalogConfig<QueryConfig, Lis
 	public QueryConfigCatalog() {
 		super( "query-catalog" , "query" );
 		this.getGeneralProps().setProperty( ATT_TYPE , QueryConfig.class.getName() );
+	}
+	
+	public static QueryConfigCatalog loadQueryConfigCatalogSafe( String path ) {
+		return SafeFunction.get( () -> {
+			QueryConfigCatalog catalog = new QueryConfigCatalog();
+			try ( InputStream is = StreamHelper.resolveStream( path ) ) {
+				GenericListCatalogConfig.load( is ,catalog );
+			}
+			return catalog;
+		} );
+	}
+	
+	public void handle( Connection conn, String catalogId, String queryId ) throws IOException {
+		log.info( "handle catalogId : {}, queryId : {}", catalogId, queryId );
+		ListMapStringKey<QueryConfig> catalog = this.getListMap( catalogId );
+		if ( catalog == null ) {
+			throw new IOException( "Catalog not found : "+catalogId );
+		}
+		QueryConfig queryConfig = catalog.get( queryId );
+		if ( queryConfig == null ) {
+			throw new IOException( "Query not found : "+queryId+" in catalog : "+catalogId );
+		}
+		handle(conn, queryConfig);
 	}
 	
 	public static void handle( Connection conn, QueryConfig queryConfig ) throws IOException {
