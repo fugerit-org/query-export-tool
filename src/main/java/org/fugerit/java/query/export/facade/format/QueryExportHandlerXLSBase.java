@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.fugerit.java.core.function.SafeFunction;
 import org.fugerit.java.core.lang.helpers.BooleanUtils;
 import org.fugerit.java.query.export.facade.QueryExportConfig;
+import org.fugerit.java.query.export.facade.QueryExportFacade;
 import org.fugerit.java.query.export.facade.QueryExportHandler;
 import org.fugerit.java.query.export.meta.MetaField;
 import org.fugerit.java.query.export.meta.MetaRecord;
@@ -28,24 +29,10 @@ public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
                 s.autoSizeColumn( c.getColumnIndex() );
         }
     }
-
-	public static void autoSizeColumns(Workbook workbook) {
-	    int numberOfSheets = workbook.getNumberOfSheets();
-	    for (int i = 0; i < numberOfSheets; i++) {
-	        Sheet sheet = workbook.getSheetAt(i);
-	        resizeSheet( sheet );
-	    }
-	}
 	
 	protected QueryExportHandlerXLSBase(String format) {
 		super(format);
 	}
-
-	public static final String ARG_XLS_TEMPLATE = "xls-template";
-	
-	public static final String ARG_XLS_RESIZE = "xls-resize";
-	
-	public static final String ARG_XLS_RESIZE_DEFAULT = "false";
 	
 	private void addRow( Iterator<MetaField> currentRecord, Sheet sheet, int index ) {
 		int col = 0;
@@ -79,7 +66,7 @@ public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
 		return SafeFunction.get( () -> {
 			int res = 0;
 			Sheet sheet = null;
-			String xlsTemplate = config.getParams().getProperty( ARG_XLS_TEMPLATE );
+			String xlsTemplate = config.getParams().getProperty( QueryExportFacade.ARG_XLS_TEMPLATE );
 			try ( Workbook workbook = this.newWorkbookHelper(xlsTemplate) ) {
 				if ( xlsTemplate == null ) {
 					sheet = workbook.createSheet();
@@ -96,7 +83,7 @@ public abstract class QueryExportHandlerXLSBase extends QueryExportHandler {
 					addRow( currentRecord.fieldIterator() , sheet, index );
 					index++;
 				}
-				if ( BooleanUtils.isTrue( config.getParams().getProperty( ARG_XLS_RESIZE ) ) ) {
+				if ( BooleanUtils.isTrue( config.getParams().getProperty( QueryExportFacade.ARG_XLS_RESIZE ) ) ) {
 					resizeSheet( sheet );
 				}
 				workbook.write( config.getOutput() );

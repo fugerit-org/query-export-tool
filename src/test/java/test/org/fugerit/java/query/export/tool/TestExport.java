@@ -29,7 +29,7 @@ public class TestExport extends TestBase {
 				} else if ( QueryExportFacade.FORMAT_XLS.equalsIgnoreCase( format ) ) {
 					config = QueryExportConfig.newConfigXLS( fos , getConnection(), query );
 				} else {
-					throw new ConfigRuntimeException( "Unsuppoorted format : "+format );
+					config = new QueryExportConfig(format, ',', fos, getConnection(), query);		// fail
 				}
 				config.getParams().putAll( params );
 				QueryExportFacade.export( config );
@@ -81,6 +81,12 @@ public class TestExport extends TestBase {
 		Properties params = new Properties();
 		boolean ok = this.testWorkerSingle( QueryExportFacade.FORMAT_HTML, params );
 		Assert.assertTrue( ok );
+	}
+
+	@Test
+	public void testFail() {
+		Properties params = new Properties();
+		Assert.assertThrows( ConfigRuntimeException.class , () -> this.testWorkerSingle( "fail", params ) );
 	}
 	
 }

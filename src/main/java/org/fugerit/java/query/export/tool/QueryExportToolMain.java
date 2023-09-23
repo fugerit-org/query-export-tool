@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 public class QueryExportToolMain {
 
+	private QueryExportToolMain() {}
+	
 	public static final String ARG_DB_CONFIG = "db-config";
 	
 	public static final String ARG_QUERY_FILE = "query-file";

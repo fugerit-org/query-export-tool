@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fugerit.java.core.db.dao.RSExtractor;
+import org.fugerit.java.core.function.SafeFunction;
 
 public abstract class BasicMetaRSE implements RSExtractor<MetaRecord>, AutoCloseable {
 
@@ -16,10 +17,6 @@ public abstract class BasicMetaRSE implements RSExtractor<MetaRecord>, AutoClose
 	
 	private BasicObjectFormat format;
 
-	public void init( ResultSetMetaData rsmd ) {
-		this.init( rsmd , null );
-	}
-	
 	public void init( ResultSetMetaData rsmd, BasicObjectFormat format ) {
 		this.rsmd = rsmd;
 		this.format = format;
@@ -45,10 +42,6 @@ public abstract class BasicMetaRSE implements RSExtractor<MetaRecord>, AutoClose
 		rse.init( rsmd, format );
 		return rse;
 	}
-	
-	public static BasicMetaRSE newInstanceAllToString( ResultSetMetaData rsmd ) {
-		return newInstanceAllToString( rsmd, new BasicObjectFormat() );
-	}
 
 	@Override
 	public void close() throws Exception {
@@ -64,13 +57,11 @@ class BasicMetaRSEAllToString extends BasicMetaRSE {
 		List<MetaField> fields = new ArrayList<>();
 		for ( int k=0; k<this.getRsmd().getColumnCount(); k++ ) {
 			Object current = rs.getObject( k+1 );
-			try {
+			SafeFunction.apply( () -> {
 				String value = this.getFormat().format( current );
 				MetaField field = new BasicMetaField( value );
 				fields.add( field );
-			} catch (Exception e) {
-				throw new SQLException( "Format error "+e.getMessage() , e );
-			}
+			} );
 		}
 		return new BasicMetaRecord( fields );
 	}

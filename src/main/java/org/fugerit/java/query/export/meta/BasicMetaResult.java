@@ -5,22 +5,14 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.fugerit.java.core.cfg.CloseHelper;
 import org.fugerit.java.core.cfg.ConfigRuntimeException;
 import org.fugerit.java.core.function.SafeFunction;
 import org.fugerit.java.core.function.SimpleValue;
+import org.fugerit.java.core.util.IteratorHelper;
 
 public class BasicMetaResult implements MetaResult {
-
-	public static MetaRecord createMetaRecord( String[] line ) {
-		List<MetaField> list = new ArrayList<>( line.length );
-		for ( int k=0; k<line.length; k++ ) {
-			list.add( new BasicMetaField( line[k] ) );
-		}
-		return new BasicMetaRecord( list );
-	}
 	
 	public BasicMetaResult( BasicMetaRSE rse, ResultSet rs) {
 		super();
@@ -59,26 +51,12 @@ public class BasicMetaResult implements MetaResult {
 
 	@Override
 	public Iterator<MetaRecord> recordIterator() {
-		return new Iterator<MetaRecord>() {
-			private boolean hasNext = false;
-			@Override
-			public boolean hasNext() {
-				this.hasNext = SafeFunction.get( () -> rs.next() );
-				return this.hasNext;
-			}
-			@Override
-			public MetaRecord next() {
-				count.setValue( count.getValue()+1 );
-				if ( !this.hasNext ) {
-					throw new NoSuchElementException( "No more elements : "+count.getValue() );
-				}
-				return SafeFunction.get( () -> rse.extractNext( rs ) );
-			}
-			@Override
-			public void remove() {
-				// no need to do anything here
-			}
-		};
+		return IteratorHelper.createSimpleIteratorSafe( 
+				rs::next , 
+				() -> {
+					count.setValue( count.getValue()+1 );
+					return rse.extractNext(rs);
+				} );
 	}
 
 	@Override
