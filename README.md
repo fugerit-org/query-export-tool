@@ -11,3 +11,62 @@ Tool export query in CSV and XLS / XLSX format
 ![Java runtime version](https://img.shields.io/badge/run%20on-java%208+-%23113366.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Java build version](https://img.shields.io/badge/build%20on-java%2011+-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-3.9.0+-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
+
+## 1 Quickstart 
+
+### 1.1 Create a sample query catalog 
+
+```
+<query-catalog-config>
+
+	<query-catalog id="main-catalog">
+		<query id="Q001" sql="SELECT * FROM  test_export" outputFormat="csv" csvSeparator=";" outputFile="target/catalog_test_001.csv"/>
+		<query id="Q002" sql="SELECT * FROM  test_export" outputFormat="csv" outputFile="target/catalog_test_002.csv"/>
+		<query id="Q003" sql="SELECT * FROM  test_export" outputFormat="html" outputFile="target/catalog_test_003.html" createPath="1"/>
+		<query id="Q004" sql="SELECT * FROM  test_export" outputFormat="xls" outputFile="target/catalog_test_004.xls" xlsResize="1"/>
+		<query id="Q005" sql="SELECT * FROM  test_export" outputFormat="xlsx" outputFile="target/catalog_test_004.xlsx" xlsTemplate="src/test/resources/template/test_template.xlsx" />
+	</query-catalog>
+
+</query-catalog-config>
+```
+
+### 1.2 Load and use the catalog
+
+```
+		QueryConfigCatalog catalog = QueryConfigCatalog.loadQueryConfigCatalogSafe( "cl://sample/query-catalog-sample.xml" );
+		try ( Connection conn = ... ) {
+			catalog.handle( conn , "main-catalog", "Q001");
+		}
+```
+
+## 2 Formats
+
+### 2.1 HTML format
+
+HTML format is handled with core I/O API, no dependency needed.
+
+### 2.2 CSV format
+
+CSV Format needs *OpenCSV* dependency, which is automatically included by default when importing query-export-tool dependency.
+
+If needed it can be added in explicit way : 
+
+```
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>${opencsv-version}</version>
+		</dependency>
+```
+
+### 2.3 XLS/XLSX formats
+
+XLS/XLSX Formats needs *Apache POI* dependency, which is *NOT* automatically included by default when importing query-export-tool dependency : 
+
+```
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi-version}</version>
+		</dependency>
+```
