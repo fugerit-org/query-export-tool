@@ -12,7 +12,7 @@ Tool export query in CSV and XLS / XLSX format
 ![Java build version](https://img.shields.io/badge/build%20on-java%2011+-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-3.9.0+-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
 
-## 1 Quickstart 
+## 1 Quickstart
 
 ### 1.1 Create a sample query catalog 
 
