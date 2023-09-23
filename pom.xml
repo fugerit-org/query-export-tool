@@ -12,11 +12,11 @@
 
 	<artifactId>query-export-tool</artifactId>
 
-	<version>0.3.2</version>
+	<version>0.4.0</version>
 	<packaging>jar</packaging>
 
 	<name>query-export-tool</name>
-	<description>Tool export query in CSV (and in the future other) formats</description>
+	<description>Tool export query in CSV and other formats</description>
 	<url>http://www.fugerit.org/java/</url>
 
 	<scm>
@@ -27,8 +27,10 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
+	    <java-version-compliance>8</java-version-compliance>
+	    <maven.compiler.source>${java-version-compliance}</maven.compiler.source>
+	    <maven.compiler.target>${java-version-compliance}</maven.compiler.target>	
+	    <maven.compiler.release>${java-version-compliance}</maven.compiler.release>
 		<!-- libraries versions -->
 		<fj-version>8.3.7</fj-version>
 		<opencsv-version>5.8</opencsv-version>
@@ -82,6 +84,14 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>${poi-version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-simple</artifactId>
+		    <version>2.0.9</version>
+		    <scope>test</scope>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
@@ -108,6 +118,24 @@
 
 		<profile>
 			<id>singlepackage</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.logging.log4j</groupId>
+				    <artifactId>log4j-api</artifactId>
+				</dependency>
+				<dependency>
+				    <groupId>org.apache.logging.log4j</groupId>
+				    <artifactId>log4j-core</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.logging.log4j</groupId>
+				    <artifactId>log4j-slf4j2-impl</artifactId>
+				</dependency>
+			</dependencies>
 			<build>
 				<plugins>
 					<plugin>

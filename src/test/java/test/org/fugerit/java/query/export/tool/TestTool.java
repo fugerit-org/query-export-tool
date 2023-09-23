@@ -11,7 +11,6 @@ public class TestTool extends TestBase {
 	@Test
 	public void test() {
 		try {
-			initDatabase();
 			logger.info( "test start" );
 			String[] args = {
 				"--"+QueryExportToolMain.ARG_DB_CONFIG, "src/test/resources/sample/db-config.properties",

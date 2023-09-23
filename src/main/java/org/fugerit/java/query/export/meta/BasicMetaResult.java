@@ -5,9 +5,12 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.fugerit.java.core.cfg.CloseHelper;
+import org.fugerit.java.core.cfg.ConfigRuntimeException;
 import org.fugerit.java.core.function.SafeFunction;
+import org.fugerit.java.core.function.SimpleValue;
 
 public class BasicMetaResult implements MetaResult {
 
@@ -23,13 +26,14 @@ public class BasicMetaResult implements MetaResult {
 		super();
 		this.rse = rse;
 		this.rs = rs;
+		this.count = new SimpleValue<>( 0 );
 	}
 
 	private BasicMetaRSE rse;
 	
 	private ResultSet rs;
 	
-	private int count;
+	private SimpleValue<Integer> count;
 	
 	@Override
 	public boolean hasHeader() {
@@ -56,12 +60,18 @@ public class BasicMetaResult implements MetaResult {
 	@Override
 	public Iterator<MetaRecord> recordIterator() {
 		return new Iterator<MetaRecord>() {
+			private boolean hasNext = false;
 			@Override
 			public boolean hasNext() {
-				return SafeFunction.get( () -> rs.next() );
+				this.hasNext = SafeFunction.get( () -> rs.next() );
+				return this.hasNext;
 			}
 			@Override
 			public MetaRecord next() {
+				count.setValue( count.getValue()+1 );
+				if ( !this.hasNext ) {
+					throw new NoSuchElementException( "No more elements : "+count.getValue() );
+				}
 				return SafeFunction.get( () -> rse.extractNext( rs ) );
 			}
 			@Override
@@ -73,11 +83,11 @@ public class BasicMetaResult implements MetaResult {
 
 	@Override
 	public int close() {
-		CloseHelper.closeRuntimeEx( this.rs );
+		Exception ex = CloseHelper.closeAll( this.rs, this.rse );
 		this.rs = null;
-		this.rse.destroy();
 		this.rse = null;
-		return this.count;
+		SafeFunction.applyIfNotNull( ex , () -> { throw new ConfigRuntimeException( ex ); } );
+		return this.count.getValue();
 	}
 	
 }

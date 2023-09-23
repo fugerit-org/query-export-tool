@@ -13,9 +13,17 @@ public class QueryExportConfig {
 	public static QueryExportConfig newConfigHTML( OutputStream output, Connection conn, String query ) {
 		return new QueryExportConfig( QueryExportFacade.FORMAT_HTML , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
 	}
-	
+
 	public static QueryExportConfig newConfigCSV( OutputStream output, Connection conn, String query ) {
 		return new QueryExportConfig( QueryExportFacade.FORMAT_CSV , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
+	}
+	
+	public static QueryExportConfig newConfigXLS( OutputStream output, Connection conn, String query ) {
+		return new QueryExportConfig( QueryExportFacade.FORMAT_XLS , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
+	}
+	
+	public static QueryExportConfig newConfigXLSX( OutputStream output, Connection conn, String query ) {
+		return new QueryExportConfig( QueryExportFacade.FORMAT_XLSX , QueryExportFacade.CSV_SEPARATOR_DEF, output, conn, query, DEFAULT_EXPORT_HEADER );
 	}
 	
 	public static QueryExportConfig newConfigCSV( OutputStream output, char separator ) {
@@ -38,6 +46,7 @@ public class QueryExportConfig {
 		this.conn = conn;
 		this.query = query;
 		this.exportHeader = exportHeader;
+		this.params = new Properties();
 	}
 
 	private String format;

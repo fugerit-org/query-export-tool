@@ -25,6 +25,8 @@ public class QueryExportFacade {
 	public static final char CSV_SEPARATOR_DEF = ',';
 	
 	public static final String FORMAT_HTML = "html";
+
+	public static final String ARG_XLS_TEMPLATE = "xls-template";
 	
 	protected static final Logger logger = LoggerFactory.getLogger(QueryExportFacade.class);
 	
@@ -32,7 +34,7 @@ public class QueryExportFacade {
 		try {
 			QueryExportHandler handler = (QueryExportHandler)ClassHelper.newInstance( type );
 			handlers.add( handler );
-		} catch (Exception e) {
+		} catch (Exception | NoClassDefFoundError e) {
 			String message = "Failed to register handler : "+type+" "+e;
 			logger.warn("{} [set log level to debug for full stack trace]", message );
 			logger.debug( message, e );
@@ -50,9 +52,9 @@ public class QueryExportFacade {
 	public static int export( QueryExportConfig config ) {
 		return SafeFunction.get( () -> {
 			int res = 0;
-			try (Statement stm = config.getConn().createStatement()) {
+			try (Statement stm = config.getConn().createStatement();
+					ResultSet rs = stm.executeQuery( config.getQuery() ) ) {
 				logger.info( "sql : {}", config.getQuery() );
-				ResultSet rs = stm.executeQuery( config.getQuery() );
 				MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData(), config.getObjectFormat() ) , rs );
 				export( config, meta );
 				int count = meta.close();

@@ -8,21 +8,23 @@ import java.util.List;
 
 import org.fugerit.java.core.db.dao.RSExtractor;
 
-public abstract class BasicMetaRSE implements RSExtractor<MetaRecord> {
+public abstract class BasicMetaRSE implements RSExtractor<MetaRecord>, AutoCloseable {
 
+	private static final BasicObjectFormat DEF = new BasicObjectFormat();
+	
 	private ResultSetMetaData rsmd;
 	
 	private BasicObjectFormat format;
 
 	public void init( ResultSetMetaData rsmd ) {
-		this.init( rsmd , BasicObjectFormat.DEF );
+		this.init( rsmd , null );
 	}
 	
 	public void init( ResultSetMetaData rsmd, BasicObjectFormat format ) {
 		this.rsmd = rsmd;
 		this.format = format;
 		if ( format == null ) {
-			this.format = BasicObjectFormat.DEF;	
+			this.format = DEF;	
 		}
 	}
 	
@@ -45,7 +47,12 @@ public abstract class BasicMetaRSE implements RSExtractor<MetaRecord> {
 	}
 	
 	public static BasicMetaRSE newInstanceAllToString( ResultSetMetaData rsmd ) {
-		return newInstanceAllToString( rsmd, BasicObjectFormat.DEF );
+		return newInstanceAllToString( rsmd, new BasicObjectFormat() );
+	}
+
+	@Override
+	public void close() throws Exception {
+		this.destroy();
 	}
 
 }
