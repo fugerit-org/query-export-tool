@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2023-11-24
+
 ## [0.4.1] - 2023-09-24
+
+### Added
+
+- queryFile handling in query-catalog.xml configuration file
+
+### Fixed
+
+- main class in pom
 
 ### Added
 

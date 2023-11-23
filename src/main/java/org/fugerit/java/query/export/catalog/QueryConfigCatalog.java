@@ -11,6 +11,7 @@ import org.fugerit.java.core.cfg.ConfigRuntimeException;
 import org.fugerit.java.core.cfg.xml.CustomListCatalogConfig;
 import org.fugerit.java.core.cfg.xml.GenericListCatalogConfig;
 import org.fugerit.java.core.function.SafeFunction;
+import org.fugerit.java.core.io.FileIO;
 import org.fugerit.java.core.io.helper.HelperIOException;
 import org.fugerit.java.core.io.helper.StreamHelper;
 import org.fugerit.java.core.lang.helpers.BooleanUtils;
@@ -64,6 +65,9 @@ public class QueryConfigCatalog extends CustomListCatalogConfig<QueryConfig, Lis
 			File file = new File( outputFile );
 			String format = queryConfig.getOutputFormat();
 			String query = queryConfig.getSql();
+			if ( StringUtils.isNotEmpty( queryConfig.getQueryFile() ) ) {
+				query = FileIO.readString( queryConfig.getQueryFile() );
+			}
 			Properties params = new Properties();
 			if ( StringUtils.isNotEmpty( queryConfig.getXlsResize() ) ) {
 				params.setProperty( QueryExportFacade.ARG_XLS_RESIZE , queryConfig.getXlsResize() );

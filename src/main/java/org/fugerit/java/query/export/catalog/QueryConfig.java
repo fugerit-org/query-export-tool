@@ -16,6 +16,8 @@ public class QueryConfig extends BasicIdConfigType {
 
 	@Getter @Setter private String sql;
 	
+	@Getter @Setter private String queryFile;
+	
 	@Getter @Setter private String outputFile;
 	
 	@Getter @Setter private String outputFormat;
