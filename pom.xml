@@ -7,7 +7,7 @@
 		<groupId>org.fugerit.java</groupId>
 		<artifactId>fj-bom</artifactId>
 		<version>1.4.2</version>
-		<relativePath></relativePath>
+		<relativePath/>
 	</parent>
 
 	<artifactId>query-export-tool</artifactId>
@@ -33,7 +33,7 @@
 	    <maven.compiler.release>${java-version-compliance}</maven.compiler.release>
 		<!-- libraries versions -->
 		<fj-version>8.3.8</fj-version>
-		<opencsv-version>5.8</opencsv-version>
+		<opencsv-version>5.9</opencsv-version>
 	</properties>
 
 	<licenses>
