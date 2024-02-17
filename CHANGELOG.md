@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded build_maven_package workflow to version 1.0.1, (accespt DISABLE_MAVEN_DEPENDENCY_SUBMISSION)
 - [Workflow review and transition to node 20](https://github.com/fugerit-org/fj-universe/issues/29)
 
 ## [0.4.2] - 2023-11-24
