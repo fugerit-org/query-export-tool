@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- [Workflow review and transition to node 20](https://github.com/fugerit-org/fj-universe/issues/29)
+
 ## [0.4.2] - 2023-11-24
 
 ## [0.4.1] - 2023-09-24
