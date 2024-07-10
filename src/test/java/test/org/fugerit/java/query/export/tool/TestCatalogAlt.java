@@ -18,9 +18,13 @@ public class TestCatalogAlt extends TestBase {
 	@Test
 	public void testCatalogAlt() throws IOException, SQLException {
 		QueryConfigCatalog catalog = QueryConfigCatalog.loadQueryConfigCatalogSafe("cl://sample/query-catalog-sample-alt.xml");
-		QueryConfig queryConfig = catalog.getListMap( "sample-catalog-alt" ).get( "Q001ALT" );
+		ListMapStringKey<QueryConfig> listQuery = catalog.getListMap( "sample-catalog-alt" );
+		QueryConfig queryConfig = listQuery.get( "Q001ALT" );
 		logger.info( "query config : {}, sql : {}", queryConfig, queryConfig.getSql() );
 		Assert.assertEquals( "SELECT * FROM  test_export", queryConfig.getSql() );
+		QueryConfig queryConfig2 = listQuery.get( "Q002ALT" );
+		logger.info( "query config 2 : {}, sql : {}", queryConfig2, queryConfig2.getSql() );
+		Assert.assertEquals( "SELECT * FROM  test_export2", queryConfig2.getSql() );
 	}
 
 }

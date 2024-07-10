@@ -1,9 +1,10 @@
 <query-catalog-config bean-mode="bean-xml-full">
 
 	<query-catalog id="sample-catalog-alt">
-		<query id="Q001ALT" outputFormat="csv" csvSeparator=";" outputFile="target/catalog_test_001.csv">
+		<query id="Q001ALT">
 			<sql>SELECT * FROM  test_export</sql>
 		</query>
+		<query id="Q002ALT" sql="SELECT * FROM  test_export2"/>
 	</query-catalog>
 
 </query-catalog-config>
