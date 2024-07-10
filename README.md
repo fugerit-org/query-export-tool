@@ -71,3 +71,29 @@ XLS/XLSX Formats needs *Apache POI* dependency, which is *NOT* automatically inc
 			<version>${poi-version}</version>
 		</dependency>
 ```
+
+## 3 Usage As SQL Catalog
+
+Create the xml catalog : 
+
+```xml
+<query-catalog-config bean-mode="bean-xml-full">
+
+	<query-catalog id="sample-catalog-alt">
+		<query id="Q001ALT" outputFormat="csv" csvSeparator=";" outputFile="target/catalog_test_001.csv">
+			<sql>SELECT * FROM  test_export</sql>
+		</query>
+	</query-catalog>
+
+</query-catalog-config>
+```
+
+Access the catalog : 
+
+```java
+QueryConfigCatalog catalog = QueryConfigCatalog.loadQueryConfigCatalogSafe("cl://sample/query-catalog-sample-alt.xml");
+QueryConfig queryConfig = catalog.getListMap( "sample-catalog-alt" ).get( "Q001ALT" );
+logger.info( "query config : {}, sql : {}", queryConfig, queryConfig.getSql() );
+```
+
+A full example is available in the [JUNIT](src/test/java/test/org/fugerit/java/query/export/tool/TestCatalogAlt.java) .
