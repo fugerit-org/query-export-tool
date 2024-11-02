@@ -65,7 +65,7 @@ public class QueryExportFacade {
 		return res;
 	}
 	
-	public static int export( QueryExportConfig config ) {
+	public static int export( ex config ) {
 		return SafeFunction.get( () -> {
 			int res = 0;
 			try (Statement stm = config.getConn().createStatement();
