@@ -64,12 +64,12 @@ public class QueryExportFacade {
 		}
 		return res;
 	}
-	
-	public static int export( ex config ) {
+
+	public static int export( QueryExportConfig config ) {
 		return SafeFunction.get( () -> {
 			int res = 0;
 			try (Statement stm = config.getConn().createStatement();
-					ResultSet rs = stm.executeQuery( config.getQuery() ) ) {
+				 ResultSet rs = stm.executeQuery( config.getQuery() ) ) {
 				log.info( "sql : {}", config.getQuery() );
 				MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData(), config.getObjectFormat() ) , rs );
 				export( config, meta );
