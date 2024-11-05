@@ -4,6 +4,8 @@ import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.Properties;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.fugerit.java.query.export.meta.BasicObjectFormat;
 
 public class QueryExportConfig {
@@ -47,6 +49,7 @@ public class QueryExportConfig {
 		this.query = query;
 		this.exportHeader = exportHeader;
 		this.params = new Properties();
+		this.tryColumnType = false;
 	}
 
 	private String format;
@@ -126,5 +129,14 @@ public class QueryExportConfig {
 	public void setObjectFormat(BasicObjectFormat objectFormat) {
 		this.objectFormat = objectFormat;
 	}
+
+	/*
+	 * if set to true, by default :
+	 * string - is unchanged
+	 * number - dependent on outout format, for excel : #,###
+	 * date - dependent on outout format, for excel : m/d/yy h:mm
+	 */
+	@Getter @Setter
+	private boolean tryColumnType;
 	
 }

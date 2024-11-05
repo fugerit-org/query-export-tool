@@ -32,10 +32,11 @@ public class QueryExportFacade {
 	public static final String ARG_XLS_RESIZE = "xls-resize";
 	
 	public static final String ARG_XLS_RESIZE_DEFAULT = "false";
-	
+
 	public static boolean registerHandler( String type ) {
 		boolean ok = false;
 		try {
+
 			QueryExportHandler handler = (QueryExportHandler)ClassHelper.newInstance( type );
 			setGet( null, handler );
 			ok = true;

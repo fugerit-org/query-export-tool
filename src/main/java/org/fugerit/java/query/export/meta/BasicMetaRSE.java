@@ -3,7 +3,9 @@ package org.fugerit.java.query.export.meta;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.fugerit.java.core.db.dao.RSExtractor;
@@ -59,8 +61,13 @@ class BasicMetaRSEAllToString extends BasicMetaRSE {
 			Object current = rs.getObject( k+1 );
 			SafeFunction.apply( () -> {
 				String value = this.getFormat().format( current );
-				MetaField field = new BasicMetaField( value );
-				fields.add( field );
+				if ( current instanceof Number ) {
+					fields.add( new BasicMetaField( value, ((Number)current).longValue() ) );
+				} else if ( current instanceof Date) {
+					fields.add( new BasicMetaField( value, new Timestamp( ((Date)current).getTime() ) ) );
+				} else {
+					fields.add( new BasicMetaField( value ) );
+				}
 			} );
 		}
 		return new BasicMetaRecord( fields );

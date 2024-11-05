@@ -96,6 +96,9 @@ public class QueryConfigCatalog extends CustomListCatalogConfig<QueryConfig, Lis
 				} else {
 					throw new ConfigRuntimeException( "Unsuppoorted format : "+format );
 				}
+				if ( StringUtils.isNotEmpty( queryConfig.getTryColumnType() ) ) {
+					config.setTryColumnType( BooleanUtils.isTrue( queryConfig.getTryColumnType() ) );
+				}
 				config.getParams().putAll( params );
 				QueryExportFacade.export(config);
 			}

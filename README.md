@@ -24,7 +24,7 @@ Tool export query in CSV and XLS / XLSX format
 		<query id="Q001" sql="SELECT * FROM  test_export" outputFormat="csv" csvSeparator=";" outputFile="target/catalog_test_001.csv"/>
 		<query id="Q002" sql="SELECT * FROM  test_export" outputFormat="csv" outputFile="target/catalog_test_002.csv"/>
 		<query id="Q003" sql="SELECT * FROM  test_export" outputFormat="html" outputFile="target/catalog_test_003.html" createPath="1"/>
-		<query id="Q004" sql="SELECT * FROM  test_export" outputFormat="xls" outputFile="target/catalog_test_004.xls" xlsResize="1"/>
+		<query id="Q004" sql="SELECT * FROM  test_export" outputFormat="xls" outputFile="target/catalog_test_004.xls" xlsResize="1" tryColumnType="1"/>
 		<query id="Q005" sql="SELECT * FROM  test_export" outputFormat="xlsx" outputFile="target/catalog_test_004.xlsx" xlsTemplate="src/test/resources/template/test_template.xlsx" />
 	</query-catalog>
 

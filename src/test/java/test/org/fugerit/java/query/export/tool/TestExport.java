@@ -12,11 +12,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TestExport extends TestBase {
-	
+
 	private boolean testWorkerSingle( String format, Properties params ) {
+		return this.testWorkerSingle( format, params, false, "" );
+	}
+
+	private boolean testWorkerSingle( String format, Properties params, boolean tryColumnType, String fileNameAppend ) {
 		return SafeFunction.get( () -> {
 			logger.info( "test start" );
-			File outputFile = new File( "target/test_export_"+params.size()+"."+format );
+			File outputFile = new File( "target/test_export_"+fileNameAppend+params.size()+"."+format );
 			try ( FileOutputStream fos = new FileOutputStream( outputFile ) ) {
 				String query = " SELECT * FROM  test_export "; 
 				QueryExportConfig config = null;
@@ -31,6 +35,7 @@ public class TestExport extends TestBase {
 				} else {
 					config = new QueryExportConfig(format, ',', fos, getConnection(), query);		// fail
 				}
+				config.setTryColumnType( tryColumnType );
 				config.getParams().putAll( params );
 				QueryExportFacade.export( config );
 				logger.info( "test end" );
@@ -59,6 +64,13 @@ public class TestExport extends TestBase {
 	public void testXlsx() {
 		Properties params = new Properties();
 		boolean ok = this.testWorkerSingle( QueryExportFacade.FORMAT_XLSX, params );
+		Assert.assertTrue( ok );
+	}
+
+	@Test
+	public void testXlsxTryType() {
+		Properties params = new Properties();
+		boolean ok = this.testWorkerSingle( QueryExportFacade.FORMAT_XLSX, params, true, "try_column_type_" );
 		Assert.assertTrue( ok );
 	}
 

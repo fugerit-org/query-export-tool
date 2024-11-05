@@ -29,11 +29,11 @@ public class TestBase {
 		if ( !init ) {
 	        try (Connection connection = getConnection(); Statement statement = connection.createStatement();) {
 	            statement.execute("CREATE TABLE test_export (id INT NOT NULL, name VARCHAR(50) NOT NULL,"
-	                    + "email VARCHAR(50) NOT NULL, PRIMARY KEY (id))");
+	                    + "email VARCHAR(50) NOT NULL, testdate DATE, PRIMARY KEY (id))");
 	            connection.commit();
-	            statement.executeUpdate("INSERT INTO test_export VALUES (1001,'FieldA1', 'FieldB1')");
-	            statement.executeUpdate("INSERT INTO test_export VALUES (1002,'FieldA2', 'FieldB2')");
-	            statement.executeUpdate("INSERT INTO test_export VALUES (1003,'FieldA3', 'FieldB3')");
+	            statement.executeUpdate("INSERT INTO test_export VALUES (1001,'FieldA1', 'FieldB1', '2024-11-02')");
+	            statement.executeUpdate("INSERT INTO test_export VALUES (1002,'FieldA2', 'FieldB2', '2024-11-03')");
+	            statement.executeUpdate("INSERT INTO test_export VALUES (1003,'FieldA3', 'FieldB3', '2024-11-04')");
 	            connection.commit();
 	            init = true;
 	        }			
