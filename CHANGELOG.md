@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- commons-lang3-version set to 3.18.0
 - poi-version set to 5.4.1
 - fj-bom set to 2.0.3 (opencsv 5.11.2)
 - fj-version set to 8.7.0

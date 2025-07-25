@@ -34,6 +34,7 @@
 		<!-- libraries versions -->
 		<fj-version>8.7.0</fj-version>
 		<poi-version>5.4.1</poi-version>
+		<commons-lang3-version>3.18.0</commons-lang3-version>
 	</properties>
 
 	<licenses>
@@ -77,7 +78,12 @@
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
-			<version>${opencsv-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3-version}</version>
 		</dependency>
 
 		<dependency>
