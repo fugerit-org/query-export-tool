@@ -33,6 +33,7 @@
 	    <maven.compiler.release>${java-version-compliance}</maven.compiler.release>
 		<!-- libraries versions -->
 		<fj-version>8.7.0</fj-version>
+		<poi-version>5.4.1</poi-version>
 	</properties>
 
 	<licenses>
