@@ -9,6 +9,7 @@ import org.fugerit.java.core.lang.helpers.ClassHelper;
 import org.fugerit.java.core.util.collection.ListMapStringKey;
 import org.fugerit.java.query.export.meta.BasicMetaRSE;
 import org.fugerit.java.query.export.meta.BasicMetaResult;
+import org.fugerit.java.query.export.meta.BasicObjectFormat;
 import org.fugerit.java.query.export.meta.MetaResult;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +34,11 @@ public class QueryExportFacade {
 	
 	public static final String ARG_XLS_RESIZE_DEFAULT = "false";
 
+	public static final String ARG_DATE_FORMAT = "date-format";
+
 	public static boolean registerHandler( String type ) {
 		boolean ok = false;
 		try {
-
 			QueryExportHandler handler = (QueryExportHandler)ClassHelper.newInstance( type );
 			setGet( null, handler );
 			ok = true;
@@ -72,7 +74,9 @@ public class QueryExportFacade {
 			try (Statement stm = config.getConn().createStatement();
 				 ResultSet rs = stm.executeQuery( config.getQuery() ) ) {
 				log.info( "sql : {}", config.getQuery() );
-				MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData(), config.getObjectFormat() ) , rs );
+				BasicObjectFormat objectFormat = BasicObjectFormat.withDateFormat(
+						config.getParams().getProperty( ARG_DATE_FORMAT ), config.getObjectFormat() );
+				MetaResult meta = new BasicMetaResult( BasicMetaRSE.newInstanceAllToString( rs.getMetaData(), objectFormat ) , rs );
 				export( config, meta );
 				int count = meta.close();
 				log.info( "record count {}", count );

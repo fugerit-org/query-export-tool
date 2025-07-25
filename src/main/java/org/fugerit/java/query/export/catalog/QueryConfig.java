@@ -31,5 +31,7 @@ public class QueryConfig extends BasicIdConfigType {
 	@Getter @Setter private String createPath;
 
 	@Getter @Setter private String tryColumnType;
+
+	@Getter @Setter private String dateFormat;
 	
 }

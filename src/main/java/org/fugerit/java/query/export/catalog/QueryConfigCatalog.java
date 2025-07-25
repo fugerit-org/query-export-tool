@@ -75,6 +75,9 @@ public class QueryConfigCatalog extends CustomListCatalogConfig<QueryConfig, Lis
 			if ( StringUtils.isNotEmpty( queryConfig.getXlsTemplate() ) ) {
 				params.setProperty( QueryExportFacade.ARG_XLS_TEMPLATE , queryConfig.getXlsTemplate() );
 			}
+			if ( StringUtils.isNotEmpty( queryConfig.getDateFormat() ) ) {
+				params.setProperty( QueryExportFacade.ARG_DATE_FORMAT , queryConfig.getDateFormat() );
+			}
 			boolean createPath = BooleanUtils.isTrue( queryConfig.getCreatePath() );
 			if ( createPath ) {
 				log.info( "create path {} : {}", file, file.getParentFile().mkdirs() );
