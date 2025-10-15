@@ -34,7 +34,7 @@
 		<!-- libraries versions -->
 		<fj-version>8.7.0</fj-version>
 		<poi-version>5.4.1</poi-version>
-		<commons-lang3-version>3.18.0</commons-lang3-version>
+		<commons-lang3-version>3.19.0</commons-lang3-version>
 	</properties>
 
 	<licenses>
